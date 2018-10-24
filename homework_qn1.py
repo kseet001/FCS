@@ -38,8 +38,6 @@ def solve_1a():
     ciphertext = encrypt(key, plaintext)
 
     print("\nQuestion 1a)")
-    print("P : %s" % (plaintext.encode()))
-    print("Key : %s" % (key.encode()))
     print("C : %s" % (hexlify(ciphertext)))
 
 
@@ -52,30 +50,43 @@ def solve_1b():
     C2 = C[32:]
 
     P1 = decrypt(key, unhexlify(C2+C1))
-    print("P1 : \t\t\t%s" % (P1.decode("utf-8")[:16]))
-    print("ORIGINAL P : \t%s" % (plaintext))
+    print("P1 : %s" % (P1.decode("utf-8")[:16]))
 
 
-def main():
+def solve_1c():
+
     ciphertext = encrypt(key, plaintext)
     C = hexlify(ciphertext)
     C1 = C[0:32]
     C2 = C[32:]
 
-    solve_1a()
-    solve_1b()
-
-    print("\nQuestion 1c)")
+    # Convert to int, increment by 1 and convert back to bytes
     C2_modified = int_from_bytes(C2) + 1
     C2_modified = int_to_bytes(C2_modified)
 
-    print(unhexlify(C1+C2))
-    print(C1+C2_modified)
+
+
+    print("\nQuestion 1c)")
+
+    print("Original ciphertext: %s" % (unhexlify(C1+C2)))             # for debugging purpose
+    print("Modified ciphertext: %s" % (unhexlify(C1+C2_modified)))     # for debugging purpose - shows that it has been incremented by 1
 
     P2 = decrypt(key, unhexlify(C1+C2_modified))
-    print("P2 : %s" % (P2))
-    P2 = decrypt(key, unhexlify(C2_modified + C1))
-    print("P2 : %s" % (P2))
+    print("P2 : %s" % (P2)[16:])
+    P2 = decrypt(key, unhexlify(C1 + C2))
+    print("P2 : %s" % (P2)[16:])
+
+
+
+def main():
+
+    print("\nP : %s" % (plaintext.encode()))
+    print("Key : %s" % (key.encode()))
+
+    solve_1a()
+    solve_1b()
+    solve_1c()
+
 
 if __name__ == "__main__":
     main()

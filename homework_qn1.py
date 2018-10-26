@@ -68,13 +68,13 @@ def solve_1c():
 
     print("\nQuestion 1c)")
 
-    print("Original ciphertext: %s" % (unhexlify(C1+C2)))             # for debugging purpose
-    print("Modified ciphertext: %s" % (unhexlify(C1+C2_modified)))     # for debugging purpose - shows that it has been incremented by 1
+    #print("Original ciphertext: %s" % (unhexlify(C1+C2)))             # for debugging purpose
+    #print("Modified ciphertext: %s" % (unhexlify(C1+C2_modified)))     # for debugging purpose - shows that it has been incremented by 1
 
     P2 = decrypt(key, unhexlify(C1+C2_modified))
     print("P2 : %s" % (P2)[16:])
-    P2 = decrypt(key, unhexlify(C1 + C2))
-    print("P2 : %s" % (P2)[16:])
+    P2 = decrypt(key, unhexlify(C1 + C2))   # for debugging purpose
+    print("P2 : %s" % (P2)[16:])    # for debugging purpose
 
 
 

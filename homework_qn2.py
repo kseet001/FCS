@@ -10,6 +10,7 @@
 # ciphertext. Decrypt this ciphertext. You may use an existing crypto library for this exercise.
 
 from Crypto.Cipher import AES
+from binascii import hexlify, unhexlify
 
 # 256 bit ciphertext
 ciphertext = b'\x7C\x3D\x26\xF7\x73\x77\x63\x5A\x5E\x43\xE9\xB5\xCC\x5D\x05\x92' \
@@ -32,7 +33,8 @@ def decrypt(ciphertext):
 def main():
     # TODO implement controls
     print("\nQuestion 2)")
-    print("Decrypted ciphertext: \n%s" % (decrypt(ciphertext).decode("utf-8")))
+    print("Ciphertext: \t\t\t%s" % (hexlify(ciphertext)))
+    print("Decrypted ciphertext: \t%s" % (decrypt(ciphertext).decode("utf-8")))
 
 
 if __name__ == '__main__':

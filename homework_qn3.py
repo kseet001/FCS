@@ -42,7 +42,10 @@ class CustomAES:
         # 1. XOR the first block of plaintext with IV
         print("Initialisation Vector : %s " % (self.IV))
         print("First block of plaintext : %s" % (hexlify(plaintext)[:32]))
-        preblock = IV ^ plaintext
+        a = 0b0100
+        b = 0b1101
+        #preblock = IV ^ plaintext
+        print(bin(a^b))
 
         # 2. Call the block encryption method with the key
         # 3. Pass the previous ciphertext and XOR with the second block of plaintext

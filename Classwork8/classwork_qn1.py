@@ -11,11 +11,9 @@ plaintext2 = "51.505-Foundations-of-Cybersecurity-MSSd"
 
 print("\nQuestion 1)")
 hasher = SHA.new(plaintext1.encode())
-print("\nSHA1 hash of '%s':" % (plaintext1))
-#print(hasher.digest())
-print(hasher.hexdigest())
+print("\nPlaintext '%s':" % (plaintext1))
+print("SHA1: %s" %(hasher.hexdigest()))
 
-print("\nSHA1 hash of '%s':" % (plaintext2))
 hasher = SHA.new(plaintext2.encode())
-#print(hasher.digest())
-print(hasher.hexdigest())
+print("\nPlaintext '%s':" % (plaintext2))
+print("SHA1: %s" %(hasher.hexdigest()))

@@ -35,5 +35,5 @@ def main():
     print("t' : \t\t\t\t%s"%(tPrime))
 
 
-if _name_ == '_main_':
+if __name__ == '__main__':
     main()

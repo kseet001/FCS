@@ -6,57 +6,34 @@ from binascii import hexlify
 key = b"\x00" * 16  # 128 bits key
 IV = b"\x00" * 16  # 128 bits IV
 
-
-def collision(message):
-    m1 = message
-
-    ''' To calculate CBC-MAC of message m, encrypt m in CBC mode with zero IV and obtain last 16bytes'''
-    encryptor = AES.new(key, AES.MODE_CBC, IV)
-
-    ''' Obtain t1 '''
-    t1 = encryptor.encrypt(m1)
-
-    ''' Find c, where (t1 xor c) = m1 '''
-    a = bytearray(t1)
-    b = bytearray(m1)
-    c = bytearray(len(a))
-    for i in range(len(a)):
-        c[i] = a[i] ^ b[i]
-    m2 = m1 + c
-
-    ''' Obtain t2 '''
-    encryptor = AES.new(key, AES.MODE_CBC, IV)  # reinitiate encryptor
-    t2 = encryptor.encrypt(m2)[16:]
-
-    print("\nSame CBC-MAC is found for m1 and m2!")
-    print("m1: \t\t\t%s" % (hexlify(m1)))
-    print("CBC-MAC(m1): \t%s" % (hexlify(t1)))
-    print("m2: \t\t\t%s" % (hexlify(m2)))
-    print("CBC-MAC(m2): \t%s" % (hexlify(t2)))
-
 def main():
+    ### Plaintext a is being transmitted
     a = b"\x00" * int(16)
     encryptor = AES.new(key,AES.MODE_CBC, IV)
     decryptor = AES.new(key,AES.MODE_CBC,IV)
 
     print("a : \t\t\t\t%s"%(hexlify(a)))
+    ### prior transmission, MAC t is generated from plaintext a
     t = encryptor.encrypt(a)
     print("t : \t\t\t\t%s"%(hexlify(t)))
-    package1 = hexlify(a) + hexlify(t)
 
+    ### tag t is appended to orginal message before transmission
+    package1 = hexlify(a) + hexlify(t)
     print("a||t : \t\t\t\t%s" %(package1))
 
+    ### an attacker intercepts the message and modify the content of the ciphertext excluding the last block to obtain a' ||t
     forged = b'0000000000111000000000000000000066e94bd4ef8a2c3b884cfa59ca342b2e'
     print("Forged message : \t%s " % (forged))
 
+    ### receiver received a forged message and decrypts it obtaining a'
     pPrime = decryptor.decrypt(forged)
-
     print("a' : \t\t\t\t%s "%(pPrime))
+
+    ### The receiver proceeds to compute the Tag for the message.
     encryptor = AES.new(key, AES.MODE_CBC, IV)
     tPrime = encryptor.encrypt(pPrime)[32:]
     print("t' : \t\t\t\t%s"%(tPrime))
 
 
-
-if __name__ == '__main__':
+if _name_ == '_main_':
     main()

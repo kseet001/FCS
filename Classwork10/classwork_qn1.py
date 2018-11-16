@@ -16,9 +16,10 @@ bobSends = (sharedBase ** b_secret) % sharedPrime
 a_compute = bobSends ** a_secret
 
 
-print("A sends    ", a_send)
-print("B computes   ", b_compute)
-print("B sends      ", bobSends)
-print ("A computes ", a_compute)
+print("A sends\t\t", a_send)
+print("B computes\t", b_compute)
+print("B sends\t\t", bobSends)
+print ("A computes\t", a_compute)
 
+print()
 print ("Computed Secret ", (sharedBase ** (a_secret * b_secret)) % sharedPrime)

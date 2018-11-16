@@ -5,6 +5,11 @@
 sharedPrime = 23
 sharedBase = 5
 
+print("Shared prime: ", sharedPrime)
+print("shared base: ", sharedBase)
+
+print()
+
 # Seret information
 a_secret = 6
 b_secret = 15
@@ -22,4 +27,4 @@ print("B sends\t\t", bobSends)
 print ("A computes\t", a_compute)
 
 print()
-print ("Computed Secret ", (sharedBase ** (a_secret * b_secret)) % sharedPrime)
+print ("Shared Secret ", (sharedBase ** (a_secret * b_secret)) % sharedPrime)

@@ -19,17 +19,22 @@ def collision(bit_size):
     start = time.time()
     while not collision:
         h = SHA512.new(hex(count).encode())
+        #h = SHA512.new(str(count).encode())
         digest = h.hexdigest()[:int(bit_size/4)]
+        digest = h.hexdigest()
+        #digest = h.digest()
 
         array_counter = 0
         # Search the digest in the array
         for entry in hash_array:
-            if digest == entry:
+            if digest[:int(bit_size/4)] == entry[:int(bit_size/4)]:
                 end = time.time()
                 collision = True
                 print("Collision found!")
                 print("Message 1: %s" % (array_counter))
+                print("Hash: ", entry)
                 print("Message 2: %s" % (count))
+                print("Hash: ", digest)
                 print(
                     "The number %s and %s produces the same SHA512 hash, %s" % (hash_array.index(entry), count, digest))
                 print("Time taken: %s seconds" %(end-start))

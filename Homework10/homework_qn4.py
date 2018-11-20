@@ -67,7 +67,7 @@ def encrypt(pk, plaintext):
 
 def sign(d,m):
     key, n = d
-    return pow(m,key)* n
+    return pow(m,key)% n
 
 def verify(e,m,c):
     if ((pow(c,e)%n) == m ):

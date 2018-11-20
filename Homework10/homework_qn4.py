@@ -81,14 +81,17 @@ if __name__ == '__main__':
     p = 71
     q = 89
 
-    m1 = 5416
-    m2 = 2397
-
+    m1 = 12312412312323
+    m2 = 2312414241239735563242
 
     public, private = generate_keypair(p, q)
     print("Your public key is ", public, " and your private key is ", private)
     m3 = (m1 * m2) % public[1]
     print("m3: ",m3)
-    print("Signed Message = ", sign(private,encrypt(public,m3)))
+    encryptedMsg = encrypt(public,m3)
+    print("Encrypted message = ", encryptedMsg)
+    print("Signed Message = ", sign(private,encryptedMsg))
+
+
 
 

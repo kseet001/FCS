@@ -52,7 +52,7 @@ def KDC(encrypted):
 
     decrypted = cipher.decrypt(encrypted)
     requester, access = decrypted.split(',')
-    print("[AS] KDC-AS Received a request from: ", requester, "on: ", access)
+    print("[AS] KDC-AS Received a request from: ", requester, "to: ", access)
     ticket = cipher2.encrypt("USER VERIFIED")
     print("[AS] User has been verified. responding with a Ticket..")
     return ticket
@@ -60,6 +60,7 @@ def KDC(encrypted):
 def TGT(request):
     decrypted = cipher2.decrypt(request)
     if decrypted == "USER VERIFIED":
+        print("[TGT] User has been verified..")
         token = cipher3.encrypt("USER ALLOWED")
         print("[TGT] Granting token to access to Bob...")
         return token
@@ -69,6 +70,7 @@ def TGT(request):
 def bob(ticket, request):
     decrypted = cipher3.decrypt(ticket)
     if decrypted == "USER ALLOWED":
+        print("[Bob] Token validated...")
         print("[Bob] You may fulfil your request on: ", request)
 
 if __name__ == '__main__':

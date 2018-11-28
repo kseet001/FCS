@@ -1,6 +1,4 @@
-import sys
 import os
-import random
 import base64
 from Crypto.Cipher import AES
 

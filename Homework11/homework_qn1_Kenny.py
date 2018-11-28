@@ -20,9 +20,12 @@ class Alice:
     def process_ticket(self, ticket):
         self.session_key = self.cipher.decrypt(ticket)
 
-    def send(self, msg):
-        ciphertext = AESCipher(self.session_key).encrypt(msg)
-        return ciphertext
+    def send(self, dest, msg):
+        if dest == "KDC":
+            return msg
+        else:
+            ciphertext = AESCipher(self.session_key).encrypt(msg)
+            return ciphertext
 
     def receive(self, msg):
         plaintext = AESCipher(self.session_key).decrypt(msg)
@@ -107,65 +110,51 @@ class AESCipher(object):
         return s[:-ord(s[len(s) - 1:])]
 
 
-def main():
-    shared_key_A = 'SHARED_KEY_A1234'
-    shared_key_B = 'SHARED_KEY_B1234'
+if __name__ == '__main__':
 
-    kdc = KDC(shared_key_A, shared_key_B)
-    alice = Alice(shared_key_A)
-    bob = Bob(shared_key_B)
+    ''' Initialise the objects and the shared keys'''
 
-    print("\n===Start of PKI key exchange===")
-    print("\n1) Alice sends a request to the PKI Server to establish a secure session with Bob")
+    shared_key_A = 'SHARED_KEY_A1234'  # Shared key between Alice and KDC
+    shared_key_B = 'SHARED_KEY_B1234'  # Shared key between Bob and KDC
+
+    kdc = KDC(shared_key_A, shared_key_B)  # Initialising a KDC object with the shared keys of Alice and Bob
+    alice = Alice(shared_key_A)  # Initialise Alice object
+    bob = Bob(shared_key_B)  # Initialise Bob object
+
+    ''' Simulating the key exchange '''
+
+    print("\n===Start of PKI key exchange===\n")
+
     auth_request = "Alice, Bob"
-    print("Alice sends: ", auth_request)
+    auth_request = alice.send("KDC", auth_request)     # Alice sends a request to KDC for a session between Alice and Bob
+    print("Alice sends to KDC: ", auth_request)
 
+    AS_response = kdc.auth_response(auth_request)
+    print("KDC reply to Alice: ", AS_response)
 
-    print("\n2) KDC sends back an authentication response, with a session key and ticket, both encrypted with the shared key between Alice and KDC")
-    AS_response = kdc.auth_response("Alice, Bob")
-    print("Response from KDC: ", AS_response)
-
-
-    print("\n3) Alice decrypts the authentication response from the KDC and obtain the session key and a ticket")
     ticket = alice.process_auth_response(AS_response)
-    print("Session key obtained: ", alice.session_key)
-    print("Ticket obtained: ", ticket)
+    print("\nAlice decrypts the response from KDC and obtained:")
+    print("\tSession key: ", alice.session_key)
+    print("\tTicket: ", ticket)
 
-    print("\n4) Alice sends Bob the ticket, which was encrypted with the shared key between Bob and KDC")
-    print("Alice sends: ", ticket)
+    print("\nAlice sends Ticket to Bob: ", ticket)
     bob.process_ticket(ticket)
 
-    print("\n5) Bob decrypts the ticket and obtains the session key")
-    print("Session key obtained: ", bob.session_key)
+    print("Bob decrypts the Ticket and obtained:")
+    print("\tSession key: ", bob.session_key)
 
-    print("\n6) Bob uses the session key and send a message to Alice")
+    print("\nBob uses the Session Key to encrypt 'Hello Alice' and sends to Alice:")
     msg1 = bob.send("Hello Alice")
-    print("Bob sends: ", msg1)
+    print("\tEncrypted message: ", msg1)
 
-    print("\n7) Alice decrypts and gets: ", alice.receive(msg1))
+    print("\nAlice decrypts using the Session Key and gets:")
+    print("\tDecrypted message from Bob: ", alice.receive(msg1))
 
-    print("\n8) Alice uses the session key and send a message to Bob")
-    msg2 = alice.send("Hello Bob! Here is my secret message")
+    print("\nAlice uses the Session Key to encrypt 'Hi Bob!' and send to Bob")
+    msg2 = alice.send("Bob", "Hi Bob")
     print("Alice sends: ", msg2)
 
-    print("\n9) Bob decrypts and gets: ", bob.receive(msg2))
+    print("\nBob decrypts using the Session Key and gets: ")
+    print("\tDecrypted message from Alice: ", bob.receive(msg2))
 
     print("\n===End of key exchange===")
-
-    '''
-    print("[Alice] Initiating KDC Process...")
-    plaintext = 'Alice, Bob'
-    print("[Alice] User: Alice, Requesting communication to : Bob")
-    encrypted = cipher.encrypt(plaintext)
-    print("[Alice] Sending authentication to KDC....")
-    ticket = KDC(encrypted)
-    print("[Alice] Ticket received.. authenticating ticket with TGT server...")
-    token = TGT(ticket)
-    print("[Alice] Received token: ", token, " from TGT...")
-    print("[Alice] initiating communication with Bob..")
-    bob(token, "i want to initiate connection.")
-    '''
-
-
-if __name__ == '__main__':
-    main()

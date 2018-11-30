@@ -5,34 +5,42 @@ from datetime import timedelta
 import RSA
 
 
-class Certificate(object):
+class Certificate:
+
+    @staticmethod
     def __init__(self):
         print("Certificate created..")
         print("version: 1.0")
 
+    @staticmethod
     def subject(self):
         print("Owner of Certificate: WE ARE THE OWNER!")
 
-    def signature(object):
+    @staticmethod
+    def signature(message):
         sign = RSA()
         p = 17
         q = 19
         public, private = sign.generate_keypair(p, q)
-        message = object
+        #message = message
         encrypted_msg = sign.encrypt(private, message)
         return encrypted_msg
 
+    @staticmethod
     def issuer(self):
         return "mssd classwork 12 qn1"
 
+    @staticmethod
     def notAfter(self):
         endDate = datetime.now() + timedelta(days=3)
         return endDate
 
+    @staticmethod
     def notBefore(self):
         startDate = datetime.now()
         return startDate
 
+    @staticmethod
     def pubKey(self):
         print("pubKey")
 
@@ -112,7 +120,8 @@ class RSA():
 
 def main():
     cert = Certificate()
-    print(cert.notBefore())
+    cert.signature()
+
 
 
 if __name__ == '__main__':

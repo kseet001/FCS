@@ -1,51 +1,8 @@
-from Crypto.Cipher import AES
-from Crypto.Hash import SHA
-from datetime import datetime
-from datetime import timedelta
-import RSA
+import random
+import time
 
-
-class Certificate:
-
-    @staticmethod
-    def __init__(self):
-        print("Certificate created..")
-        print("version: 1.0")
-
-    @staticmethod
-    def subject(self):
-        print("Owner of Certificate: WE ARE THE OWNER!")
-
-    @staticmethod
-    def signature(message):
-        sign = RSA()
-        p = 17
-        q = 19
-        public, private = sign.generate_keypair(p, q)
-        #message = message
-        encrypted_msg = sign.encrypt(private, message)
-        return encrypted_msg
-
-    @staticmethod
-    def issuer(self):
-        return "mssd classwork 12 qn1"
-
-    @staticmethod
-    def notAfter(self):
-        endDate = datetime.now() + timedelta(days=3)
-        return endDate
-
-    @staticmethod
-    def notBefore(self):
-        startDate = datetime.now()
-        return startDate
-
-    @staticmethod
-    def pubKey(self):
-        print("pubKey")
-
-
-class RSA():
+class RSA(object):
+    ...
 
     def gcd(a, b):
         while b != 0:
@@ -116,13 +73,3 @@ class RSA():
         plain = [chr((char ** key) % n) for char in ciphertext]
         # Return the array of bytes as a string
         return ''.join(plain)
-
-
-def main():
-    cert = Certificate()
-    cert.signature()
-
-
-
-if __name__ == '__main__':
-    main()

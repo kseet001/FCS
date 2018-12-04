@@ -129,13 +129,14 @@ class person():
         self.root_key = ""
         self.root_CA = ""
         self.server_key = ""
+
         self.sharedPrivateKey= ""
         self.Message= ""
 
-    def getCertificate(self):
-        self.root_key , self.server_key = RSA.generate(2048), RSA.generate(2048)
+    def getCertificate(self, subject, issuer):
+        self.root_key, self.server_key = RSA.generate(2048), RSA.generate(2048)
         self.root_CA = Certificate()
-        self.root_CA.create_certificate("root", "root", self.root_key, self.root_key)
+        self.root_CA.create_certificate(subject, issuer, self.root_key, self.root_key)
         return self.root_CA.get_cert()
 
     def sharedPrivate(self, key):
@@ -239,14 +240,14 @@ def main():
     print("\nAlice communicates with server")
     print("Server sends Alice the server's certificate")
     alice = person()
-    a_certificate = alice.getCertificate()
+    a_certificate = alice.getCertificate("root", "root")
     print("Alice obtained: ")
     print(a_certificate)
 
     print("\nBob communicates with server")
     print("Server sends Bob the server's certificate")
     bob = person()
-    b_certificate = bob.getCertificate()
+    b_certificate = bob.getCertificate("root", "root")
     print("Bob obtained: ")
     print(b_certificate)
     print("\n\n")

@@ -11,6 +11,7 @@ from Crypto.Cipher import AES
 from Crypto.Util import Counter
 from Crypto import Random
 from binascii import hexlify
+import peer
 
 # Choose a random, 16-byte IV.
 iv = Random.new().read(AES.block_size)

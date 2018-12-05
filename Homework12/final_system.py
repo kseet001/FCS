@@ -78,11 +78,13 @@ def modified_key_negotiation(key_A, key_B, cert_A, cert_B):
     # Alice
     S_alice = 3  # min prime size = 3
     N = random.randint(0, (2 ** 256) - 1)
-    print("Alice sends {S_alice: %s, N: %s, certificate: %s" % (S_alice, N, cert_A))
+    print("Alice sends (S_alice || N || alice_certificate) to Bob:")
+    print("{S_alice: %s, N: %s, certificate: %s}" % (S_alice, N, cert_A))
     print()
 
     # Bob verifies Alice's certificate first, before going thru the key negotiation process
     if bob.verify_cert(cert_A, root_ca.get_public_key()):
+        print("Bob verifies Alice's certificate - OK")
         S_bob = 3
         s = max(S_alice, S_bob)
         assert s <= 2 * S_bob
@@ -103,7 +105,8 @@ def modified_key_negotiation(key_A, key_B, cert_A, cert_B):
         h = SHA.new(s_str.encode())
         signer = PKCS2.new(key_B)
         signature = signer.sign(h)
-        print("Bob sends: {(g,p,q): (%s,%s,%s), B: %s, AUTHbob: %s, Bob's Certificate: %s" % (g, p, q, B, signature, cert_B))
+        print("Bob sends ((g,p,q) || B || || AUTHbob || bob_certificate) to Alice:")
+        print("{(g,p,q): (%s,%s,%s), B: %s, AUTHbob: %s, Bob's Certificate: %s}" % (g, p, q, B, signature, cert_B))
         print()
     else:
         print("Key negotiation failed")
@@ -114,6 +117,8 @@ def modified_key_negotiation(key_A, key_B, cert_A, cert_B):
     verifier = PKCS2.new(key_B)
     # Alice checks AUTHbob and the Bob's certificate
     if (verifier.verify(h, signature)) and (alice.verify_cert(cert_B, root_ca.get_public_key())):
+        print("Alice verifies Bob's certificate - OK")
+        print("Alice verifies AUTHbob - OK")
         # Assert
         assert (S_alice - 1) <= math.log(p, 2)
         assert math.log(p, 2) <= 2 * S_alice
@@ -130,25 +135,26 @@ def modified_key_negotiation(key_A, key_B, cert_A, cert_B):
         signature = signer.sign(h)
         Kp = (B ** a) % p
         alice_K = SHA256.new(str(Kp).encode()).hexdigest()
-        #print("Alice sends: A=", A, " AUTHalice=", signature)
-        print("Alice sends: {A: %s, AUTHalice: %s" % (A, signature))
+        print("Alice sends (A || AUTHalice}")
+        print("{A: %s, AUTHalice: %s" % (A, signature))
         print()
     else:
         print("key negotiation failed")
         return
 
-    # Send to Bob
+    # Bob checks AUTHalice
     h = SHA.new(s_str.encode())
     verifier = PKCS2.new(key_A)
-
-    # Bob checks AUTHalice
     if verifier.verify(h, signature):
-        #print("Alice's signature is valid")
+        print("Bob verifies AUTHalice - OK")
         assert A != 1
         assert A ** q % p == 1
 
         Kp2 = (A ** b) % p
         bob_K = SHA256.new(str(Kp2).encode()).hexdigest()
+
+        print("Key negotiation successful!")
+
         return alice_K
 
     else:

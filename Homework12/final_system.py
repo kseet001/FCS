@@ -73,7 +73,11 @@ def is_prime(n):
         n += 1
     return n
 
-
+'''
+The key negotiation protocol is based on Diffie-Hellmanv3, implemented during Classwork 11.
+The modified key negotiation protocol includes validation of Alice's and Bob's certificate, in addition to the existing
+validation of the AUTHalice and AUTHbob during the negotiation.
+'''
 def modified_key_negotiation(key_A, key_B, cert_A, cert_B):
     # Alice
     S_alice = 3  # min prime size = 3
